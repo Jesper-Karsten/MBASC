@@ -2,7 +2,7 @@
 
 ## What is MBASC
 
-TODO
+Mult-Band AGN-SFG Classifier (MBASC) is a machine learning (ML) based algorithm aimed to classify sources as Active Galactic Nuclei (AGNs) and Star Forming Galaxies (SFGs) in a quick, reliable and reproducable way. This algorithm is based on the light gradient-boosting machine ML technique. This model can use a wide range of multi-wavelength data and redshifts to predict a classification for sources. For details on the model and the data on which it is trained, the citation at the bottom can be consulted.
 
 ## Installation
 
@@ -17,44 +17,67 @@ Python 3 is required to run the algorithm. In addition the following dependecies
 
 To run with default parameters:
 
-::
-
 	python MBASC.py [path/to/file.csv]
   
-The following features can be used in the model, it is important that the **exact** name (except for capitalisation) is used in the csv file as header. If a certain feature is not available, it can simply be left out.
+The following features can be used in the model, it is important that the **exact** name (except for capitalisation) is used in the csv file as header. If a certain feature is not available, it can simply be left out. All units (except redshift) must be converted to μJy. An example file is included in this repository (example.csv).
 
-| Feature name      | Description                                               |
-|-------------------|-----------------------------------------------------------|
-| redshift          | Redshift of source                                        |
-| u                 | u-band flux density (μJy)                                 |
-| g                 | g-band flux density (μJy)                                 |
-| r                 | r-band flux density (μJy)                                 |
-| i                 | i-band flux density (μJy)                                 |
-| z                 | z-band flux density (μJy)                                 |
-| y                 | y-band flux density (μJy)                                 |
-| J                 | J-band flux density (μJy)                                 |
-| H                 | H-band flux density (μJy)                                 |
-| K                 | K-band flux density (μJy)                                 |
-| ch1-ch4           | IRAC channel 1 flux density at 3.6 μm respectively (μJy)  |
-| ch2               | IRAC channel 2 flux density at 4.5 μm respectively (μJy)  |
-| ch3               | IRAC channel 3 flux density at 5.7 μm respectively (μJy)  |
-| ch4               | IRAC channel 4 flux density at 7.9 μm respectively (μJy)  |
-| MIPS24            | Multiband Imaging Photometer for SIRTF 24 μm (μJy)        |
-| PACS100           | Photodetector Array Camera and Spectrometer 100 μm (μJy)  |
-| PACS160           | Photodetector Array Camera and Spectrometer 160 μm (μJy)  |
-| SPIRE250          | Spectral and Photometric Imaging REceiver 250 μm (μJy)    |
-| SPIRE350          | Spectral and Photometric Imaging REceiver 350 μm (μJy)    |
-| SPIRE500          | Spectral and Photometric Imaging REceiver 500 μm (μJy)    |
-| radiototal        | Total 150 MHz radio flux (μJy)                            |
-| radiopeak         | Peak 150 MHz radio flux (μJy)                             |
-  
+| Feature name      | Description                                                                   |
+|-------------------|-------------------------------------------------------------------------------|
+| id (optional)     | ID used to save the sources as, if not given a simple numerical value is used.|
+| redshift          | Redshift of source                                                            |
+| u                 | u-band flux density                                                           |
+| g                 | g-band flux density                                                           |
+| r                 | r-band flux density                                                           |
+| i                 | i-band flux density                                                           |
+| z                 | z-band flux density                                                           |
+| y                 | y-band flux density                                                           |
+| J                 | J-band flux density                                                           |
+| H                 | H-band flux density                                                           |
+| K                 | K-band flux density                                                           |
+| ch1               | IRAC channel 1 flux density at 3.6 μm respectively                            |
+| ch2               | IRAC channel 2 flux density at 4.5 μm respectively                            |
+| ch3               | IRAC channel 3 flux density at 5.7 μm respectively                            |
+| ch4               | IRAC channel 4 flux density at 7.9 μm respectively                            |
+| MIPS24            | Multiband Imaging Photometer for SIRTF 24 μm                                  |
+| PACS100           | Photodetector Array Camera and Spectrometer 100 μm                            |
+| PACS160           | Photodetector Array Camera and Spectrometer 160 μm                            |
+| SPIRE250          | Spectral and Photometric Imaging REceiver 250 μm                              |
+| SPIRE350          | Spectral and Photometric Imaging REceiver 350 μm                              |
+| SPIRE500          | Spectral and Photometric Imaging REceiver 500 μm                              |
+| radiototal        | Total 150 MHz radio flux                                                      |
+| radiopeak         | Peak 150 MHz radio flux                                                       |
+
+Output of the model will be in output/results.csv. 
+
+## Interpreting the output file
+
+The results.csv file has 3 columns: id, output, and AGN. The ID column is the given ID, or if not given a simple numeric value. The results.csv is in the same order as the input file. The output file is the raw output the LightGBM algorithm gives. This value is a fraction, and thus not a binary classification. This value is between 0 and 1 and is simply rounded to result in the AGN column. The AGN column is 1 for a predicted AGN and 0 for a predicted SFG.
+
+It is important to note that the output column **does not** have to correspond to a likelihood that a source is an AGN. It entirely depends on how well the classifier works on the whole dataset. It might be of interest to analyse histograms of this column, but be careful when using this value. 
+
 ## Troubleshooting
 
+Here are a few issues you might run into and some potential solutions:
 
+**The algorithm does not recognise a waveband I have put in**
+
+- Make sure you spelled the name correctly and saved the new file with that name.
+
+**Can I use this algorithm with 1.4 GHz data**
+
+- Yes, but you will have to convert it yourself (this might be added to the model itself later). See the corresponding paper for performance with generated 150 MHz data
+
+**The model seems to classify wrongly (a lot of misclassifications according to other criteria, or all SFG/AGN classifications)**
+
+- Check that you converted all the units to μJy. 
+- Remove data columns with very few samples, the model might make wrong predictions based on this. 
+- Play around with removing some features from the data, particurarly radio data can be tricky to cross-match. Wrongly cross-matched data can give bad results.
+- Ensure that you used 150 MHz radio data, not 1.4 GHz or some other waveband.
+- If this issue still persists, feel free to make an issue on this github page or send me a message. This is a relatively new algorithm, so issues are to be expected.
 
 ## Issues, Questions and Suggestions 
 
-In case you have issues, questions or suggestions for the algorithm or anything related to it, please create an issue in this repository. Alternatively you can also send me an email at the email displayed on my profile.
+In case you have issues, questions or suggestions for the algorithm or anything related to it, please create an issue in this repository. Alternatively you can also send me an email at the email displayed on my profile. I'd be happy to be of assistance.
 
 ## Citation
 
