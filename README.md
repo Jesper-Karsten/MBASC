@@ -19,7 +19,7 @@ To run with default parameters:
 
 	python MBASC.py [path/to/file.csv]
   
-The following features can be used in the model, it is important that the **exact** name (except for capitalisation) is used in the csv file as header. If a certain feature is not available, it can simply be left out. All units (except redshift) must be converted to μJy. An example file is included in this repository (example.csv).
+The following features can be used in the model, it is important that the **exact** name (except for capitalisation) is used in the csv file as header. If a certain feature is not available, it can simply be left out. All units (except redshift) must be converted to μJy. An example file is included in this repository (example.csv) on which you can run the algorithm (python MBASC.py example.csv).
 
 | Feature name      | Description                                                                   |
 |-------------------|-------------------------------------------------------------------------------|
