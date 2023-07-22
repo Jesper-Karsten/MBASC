@@ -81,4 +81,19 @@ In case you have issues, questions or suggestions for the algorithm or anything 
 
 ## Citation
 
-TODO
+If you use this algorithm in your research please use the following citation:
+
+```
+@article{Karsten2023,
+	author = {{Karsten, J.} and {Wang, L.} and {Margalef-Bentabol, B.} and {Best, P. N.} and {Kondapally, R.} and {La Marca, A.} and {Morganti, R.} and {R\"ottgering, H. J. A.} and {Vaccari, M.} and {Sabater, J.}},
+	title = {A multi-band AGN-SFG classifier for extragalactic radio surveys using machine learning},
+	DOI= "10.1051/0004-6361/202346770",
+	url= "https://doi.org/10.1051/0004-6361/202346770",
+	journal = {A\&A},
+	year = 2023,
+	volume = 675,
+	pages = "A159",
+}
+```
+
+The corresponding paper can be found at: https://www.aanda.org/articles/aa/full_html/2023/07/aa46770-23/aa46770-23.html.
